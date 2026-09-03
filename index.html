@@ -1,0 +1,359 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SENTIN-AI | CubeSat FDIR Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- ================= HEADER ================= -->
+    <header class="top-header">
+
+        <div class="brand">
+            <div class="satellite-icon">✦</div>
+
+            <div>
+                <h1>SENTIN-<span>AI</span></h1>
+                <p>Autonomous CubeSat Health Monitoring &amp; FDIR</p>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <span class="badge simulation">SIMULATION MODE</span>
+            <span class="badge link">● LINK: SIMULATED</span>
+        </div>
+
+        <div class="clock">
+            <div id="clockTime">10:42:35 AM</div>
+            <span id="clockDate">May 24, 2025</span>
+        </div>
+
+    </header>
+
+
+    <!-- ================= SYSTEM STATUS ================= -->
+    <section class="system-status">
+
+        <div class="system-title">
+            <span class="shield">♢</span>
+            <strong>SYSTEM STATUS</strong>
+        </div>
+
+        <div class="bus-status">
+            <span class="status-dot"></span>
+            <span>BUS VOLTAGE</span>
+            <strong id="busVoltage">3.72 V</strong>
+        </div>
+
+        <div class="system-message" id="systemMessage">
+            ✓ ALL SYSTEMS NOMINAL
+        </div>
+
+    </section>
+
+
+    <!-- ================= TELEMETRY ================= -->
+    <section class="section">
+
+        <div class="section-title">TELEMETRY</div>
+
+        <div class="telemetry-grid">
+
+            <!-- Current -->
+            <div class="telemetry-card">
+                <div class="telemetry-label">LOAD CURRENT</div>
+                <div class="telemetry-value">
+                    <span id="current">0.24</span>
+                    <small>A</small>
+                </div>
+                <div class="nominal" id="currentState">NOMINAL</div>
+            </div>
+
+            <!-- Voltage -->
+            <div class="telemetry-card">
+                <div class="telemetry-label">BUS VOLTAGE</div>
+                <div class="telemetry-value">
+                    <span id="voltage">3.72</span>
+                    <small>V</small>
+                </div>
+                <div class="nominal">NOMINAL</div>
+            </div>
+
+            <!-- Temperature -->
+            <div class="telemetry-card">
+                <div class="telemetry-label">TEMPERATURE</div>
+                <div class="telemetry-value">
+                    <span id="temperature">31.2</span>
+                    <small>°C</small>
+                </div>
+                <div class="nominal">NOMINAL</div>
+            </div>
+
+            <!-- Accelerometer -->
+            <div class="telemetry-card motion-card">
+                <div class="motion-header">
+                    <span>ACCELEROMETER</span>
+                    <small>m/s²</small>
+                </div>
+
+                <div class="axis-values">
+                    <div>
+                        <span>X</span>
+                        <strong id="accelX">0.02</strong>
+                    </div>
+
+                    <div>
+                        <span>Y</span>
+                        <strong id="accelY">-0.01</strong>
+                    </div>
+
+                    <div>
+                        <span>Z</span>
+                        <strong id="accelZ">1.00</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gyroscope -->
+            <div class="telemetry-card motion-card">
+                <div class="motion-header">
+                    <span>GYROSCOPE</span>
+                    <small>°/s</small>
+                </div>
+
+                <div class="axis-values">
+                    <div>
+                        <span>X</span>
+                        <strong id="gyroX">0.15</strong>
+                    </div>
+
+                    <div>
+                        <span>Y</span>
+                        <strong id="gyroY">-0.08</strong>
+                    </div>
+
+                    <div>
+                        <span>Z</span>
+                        <strong id="gyroZ">0.22</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FDIR STATUS ================= -->
+    <section class="section">
+
+        <div class="section-title">FDIR STATUS</div>
+
+        <div class="fdir-grid">
+
+            <div class="fdir-card">
+                <div class="fdir-icon">⚠</div>
+                <div class="fdir-label">FAULT</div>
+                <div class="fdir-value normal-text" id="faultStatus">
+                    NORMAL
+                </div>
+                <p id="faultDescription">No active fault</p>
+            </div>
+
+            <div class="fdir-card">
+                <div class="fdir-icon">◈</div>
+                <div class="fdir-label">SEVERITY</div>
+                <div class="fdir-value normal-text" id="severityStatus">
+                    NORMAL
+                </div>
+                <p id="severityDescription">System operating normally</p>
+            </div>
+
+            <div class="fdir-card">
+                <div class="fdir-icon">⚙</div>
+                <div class="fdir-label">FDIR STATE</div>
+                <div class="fdir-value blue-text" id="fdirState">
+                    MONITOR
+                </div>
+                <p id="stateDescription">Monitoring telemetry</p>
+            </div>
+
+            <div class="fdir-card">
+                <div class="fdir-icon">ϟ</div>
+                <div class="fdir-label">ACTION</div>
+                <div class="fdir-value blue-text" id="actionStatus">
+                    MONITOR
+                </div>
+                <p id="actionDescription">No corrective action</p>
+            </div>
+
+            <div class="fdir-card">
+                <div class="fdir-icon">↻</div>
+                <div class="fdir-label">RECOVERY</div>
+                <div class="fdir-value success-text" id="recoveryStatus">
+                    IDLE
+                </div>
+                <p id="recoveryDescription">System stable</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= LIVE FDIR MONITORING ================= -->
+    <section class="monitoring-panel">
+
+        <div class="monitoring-header">
+
+            <div>
+                <span class="section-title">LIVE FDIR MONITORING</span>
+                <span class="time-range">(Last 60 Seconds)</span>
+            </div>
+
+            <div class="live-indicator">
+                <span></span>
+                LIVE
+            </div>
+
+        </div>
+
+
+        <div class="charts-grid">
+
+            <!-- FAULT ACTIVITY -->
+            <div class="chart-card">
+
+                <div class="chart-heading">
+                    <div>
+                        <h3>FAULT ACTIVITY</h3>
+                        <p>Fault Detection Signal</p>
+                    </div>
+
+                    <span class="chart-state green-state" id="faultChartState">
+                        ● IDLE
+                    </span>
+                </div>
+
+                <div class="chart-wrapper">
+                    <canvas id="faultChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- SEVERITY -->
+            <div class="chart-card">
+
+                <div class="chart-heading">
+                    <div>
+                        <h3>SEVERITY LEVEL</h3>
+                        <p>Fault Severity Over Time</p>
+                    </div>
+
+                    <span class="chart-state severity-state" id="severityChartState">
+                        ● NORMAL
+                    </span>
+                </div>
+
+                <div class="chart-wrapper">
+                    <canvas id="severityChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- RECOVERY -->
+            <div class="chart-card">
+
+                <div class="chart-heading">
+                    <div>
+                        <h3>RECOVERY PROGRESS</h3>
+                        <p>Recovery Status Over Time</p>
+                    </div>
+
+                    <span class="chart-state green-state" id="recoveryChartState">
+                        ● IDLE
+                    </span>
+                </div>
+
+                <div class="chart-wrapper">
+                    <canvas id="recoveryChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= LOWER SECTION ================= -->
+    <section class="bottom-grid">
+
+        <!-- EVENT LOG -->
+        <div class="event-panel">
+
+            <div class="panel-header">
+                <span>FDIR EVENT LOG</span>
+            </div>
+
+            <div class="event-list" id="eventLog"></div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+        <div class="control-panel">
+
+            <div class="panel-header">
+                <span>PROTOTYPE CONTROLS</span>
+            </div>
+
+            <div class="control-buttons">
+
+                <button class="fault-button" onclick="injectOvercurrent()">
+                    ⚠ &nbsp; INJECT OVERCURRENT
+                </button>
+
+                <button class="normal-button" onclick="forceNormal()">
+                    ✦ &nbsp; NORMAL
+                </button>
+
+                <button class="success-button" onclick="showSuccess()">
+                    ◆ &nbsp; SUCCESS
+                </button>
+
+            </div>
+
+            <button class="reset-button" onclick="resetSystem()">
+                ↻ &nbsp; RESET SYSTEM
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer>
+        SENTIN-AI v1.00 &nbsp;|&nbsp; Phase 1 Prototype &nbsp;|&nbsp; Simulated Telemetry
+    </footer>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
