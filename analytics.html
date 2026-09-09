@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SENTIN-AI | Analytics</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+    margin:0;
+    background:#020d20;
+    color:#e8f4ff;
+    font-family:Arial,sans-serif;
+}
+
+.page{
+    padding:30px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+h1{
+    color:#00d9ff;
+}
+
+.status{
+    background:#063c36;
+    color:#00ffae;
+    padding:10px 18px;
+    border-radius:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.card{
+    background:#061a35;
+    border:1px solid #0b416d;
+    border-radius:12px;
+    padding:20px;
+}
+
+.card h2{
+    color:#00d9ff;
+    margin-top:0;
+}
+
+.chart{
+    height:280px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:#061a35;
+    border:1px solid #0b416d;
+    border-radius:10px;
+    padding:18px;
+}
+
+.stat-title{
+    color:#8ca9c4;
+}
+
+.stat-value{
+    font-size:28px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.normal{
+    color:#00ffae;
+}
+
+.warning{
+    color:#ffc857;
+}
+
+.critical{
+    color:#ff4545;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #12395b;
+    text-align:left;
+}
+
+th{
+    color:#66d9ff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div>
+<h1>MISSION ANALYTICS</h1>
+
+<p>
+SENTIN-AI Telemetry, Fault & Recovery Analysis
+</p>
+</div>
+
+<div class="status">
+● ANALYTICS ONLINE
+</div>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="stat-title">
+SYSTEM HEALTH
+</div>
+
+<div class="stat-value normal">
+92%
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-title">
+FAULTS DETECTED
+</div>
+
+<div class="stat-value critical">
+7
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-title">
+RECOVERIES
+</div>
+
+<div class="stat-value normal">
+7
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-title">
+RECOVERY SUCCESS
+</div>
+
+<div class="stat-value normal">
+100%
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CHARTS -->
+
+<div class="grid">
+
+
+<div class="card">
+
+<h2>Health Trend</h2>
+
+<div class="chart">
+<canvas id="healthChart"></canvas>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Power Trend</h2>
+
+<div class="chart">
+<canvas id="powerChart"></canvas>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Temperature Trend</h2>
+
+<div class="chart">
+<canvas id="temperatureChart"></canvas>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Fault Activity</h2>
+
+<div class="chart">
+<canvas id="faultChart"></canvas>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Recovery Performance</h2>
+
+<div class="chart">
+<canvas id="recoveryChart"></canvas>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>FDIR Layer Usage</h2>
+
+<div class="chart">
+<canvas id="layerChart"></canvas>
+</div>
+
+</div>
+
+</div>
+
+
+<br>
+
+
+<!-- FAULT HISTORY -->
+
+<div class="card">
+
+<h2>Fault History</h2>
+
+<table>
+
+<tr>
+<th>Time</th>
+<th>Fault</th>
+<th>Severity</th>
+<th>FDIR Layer</th>
+<th>Action</th>
+<th>Result</th>
+</tr>
+
+<tr>
+<td>10:42:22</td>
+<td>Overcurrent</td>
+<td class="critical">Critical</td>
+<td>Rule-Based</td>
+<td>Load Isolated</td>
+<td class="normal">Recovered</td>
+</tr>
+
+<tr>
+<td>10:35:17</td>
+<td>Temperature Anomaly</td>
+<td class="warning">Warning</td>
+<td>Adaptive</td>
+<td>Load Reduced</td>
+<td class="normal">Recovered</td>
+</tr>
+
+<tr>
+<td>10:29:44</td>
+<td>Communication Loss</td>
+<td class="warning">High</td>
+<td>Rule-Based</td>
+<td>Link Restart</td>
+<td class="normal">Recovered</td>
+</tr>
+
+<tr>
+<td>10:21:12</td>
+<td>Sensor Drift</td>
+<td class="warning">Medium</td>
+<td>Adaptive</td>
+<td>Sensor Rejected</td>
+<td class="normal">Recovered</td>
+</tr>
+
+</table>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* HEALTH */
+
+new Chart(
+document.getElementById("healthChart"),
+{
+type:"line",
+
+data:{
+labels:[
+"10:20",
+"10:25",
+"10:30",
+"10:35",
+"10:40",
+"10:45"
+],
+
+datasets:[{
+label:"Health Score",
+
+data:[
+88,90,91,89,94,92
+],
+
+tension:0.4
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+
+});
+
+
+/* POWER */
+
+new Chart(
+document.getElementById("powerChart"),
+{
+type:"line",
+
+data:{
+labels:[
+"10:20",
+"10:25",
+"10:30",
+"10:35",
+"10:40",
+"10:45"
+],
+
+datasets:[{
+label:"Power (W)",
+
+data:[
+0.82,
+0.86,
+0.91,
+0.88,
+0.93,
+0.89
+],
+
+tension:0.4
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+
+});
+
+
+/* TEMPERATURE */
+
+new Chart(
+document.getElementById("temperatureChart"),
+{
+type:"line",
+
+data:{
+labels:[
+"10:20",
+"10:25",
+"10:30",
+"10:35",
+"10:40",
+"10:45"
+],
+
+datasets:[{
+label:"Temperature °C",
+
+data:[
+29,
+30,
+31,
+31.5,
+32,
+31.2
+],
+
+tension:0.4
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+
+});
+
+
+/* FAULT ACTIVITY */
+
+new Chart(
+document.getElementById("faultChart"),
+{
+type:"bar",
+
+data:{
+labels:[
+"Overcurrent",
+"Undervoltage",
+"Temperature",
+"Sensor",
+"Communication"
+],
+
+datasets:[{
+label:"Fault Count",
+
+data:[
+3,
+1,
+1,
+1,
+1
+]
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+
+});
+
+
+/* RECOVERY */
+
+new Chart(
+document.getElementById("recoveryChart"),
+{
+type:"line",
+
+data:{
+labels:[
+"Fault 1",
+"Fault 2",
+"Fault 3",
+"Fault 4",
+"Fault 5",
+"Fault 6",
+"Fault 7"
+],
+
+datasets:[{
+label:"Recovery Success %",
+
+data:[
+95,
+96,
+94,
+97,
+98,
+99,
+100
+],
+
+tension:0.4
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false,
+scales:{
+y:{
+min:0,
+max:100
+}
+}
+}
+
+});
+
+
+/* LAYERS */
+
+new Chart(
+document.getElementById("layerChart"),
+{
+type:"doughnut",
+
+data:{
+labels:[
+"Rule-Based",
+"Adaptive"
+],
+
+datasets:[{
+data:[
+65,
+35
+]
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+
+});
+
+</script>
+
+</body>
+</html>

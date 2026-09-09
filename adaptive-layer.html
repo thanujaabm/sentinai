@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>SENTIN-AI | Adaptive Layer</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#020d20;
+color:white;
+}
+
+.page{
+padding:30px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+h1{
+color:#00d9ff;
+}
+
+.status{
+background:#063c36;
+color:#00ffae;
+padding:10px 18px;
+border-radius:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.card{
+background:#061a35;
+border:1px solid #0b416d;
+border-radius:12px;
+padding:20px;
+}
+
+.card h2{
+color:#00d9ff;
+}
+
+.value{
+font-size:30px;
+font-weight:bold;
+margin:10px 0;
+}
+
+.normal{
+color:#00ffae;
+}
+
+.warning{
+color:#ffc857;
+}
+
+.critical{
+color:#ff4545;
+}
+
+.progress{
+height:12px;
+background:#102c48;
+border-radius:10px;
+overflow:hidden;
+}
+
+.progress div{
+height:100%;
+width:78%;
+background:#00d9ff;
+}
+
+button{
+padding:12px 20px;
+border:0;
+border-radius:7px;
+background:#007cff;
+color:white;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+<div class="header">
+
+<div>
+
+<h1>ADAPTIVE FDIR LAYER</h1>
+
+<p>
+Adaptive Anomaly Detection & Intelligent Recovery
+</p>
+
+</div>
+
+<div class="status">
+● ADAPTIVE ENGINE ACTIVE
+</div>
+
+</div>
+
+
+<div class="grid">
+
+
+<div class="card">
+
+<h2>Telemetry Baseline</h2>
+
+<p>Voltage</p>
+<div class="value">3.72 V</div>
+
+<p>Current</p>
+<div class="value">0.24 A</div>
+
+<p>Temperature</p>
+<div class="value">31.2 °C</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Anomaly Score</h2>
+
+<div class="value normal"
+id="score">
+
+12%
+
+</div>
+
+<div class="progress">
+<div id="scoreBar"></div>
+</div>
+
+<p>
+0–30% = Normal
+</p>
+
+<p>
+30–70% = Suspicious
+</p>
+
+<p>
+70–100% = Anomaly
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>Adaptive Decision</h2>
+
+<p id="decision">
+
+No anomaly detected.
+System operating normally.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>Recovery Strategy</h2>
+
+<p>
+
+The adaptive layer selects a recovery action
+based on anomaly severity and system state.
+
+</p>
+
+<button onclick="adaptiveTest()">
+
+Run Adaptive Test
+
+</button>
+
+<p id="testResult"></p>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+function adaptiveTest(){
+
+let score =
+Math.floor(Math.random()*60)+20;
+
+document.getElementById("score").innerText =
+score + "%";
+
+document.getElementById("scoreBar").style.width =
+score + "%";
+
+if(score < 30){
+
+document.getElementById("decision").innerText =
+"Normal telemetry. No recovery required.";
+
+}
+
+else if(score < 70){
+
+document.getElementById("decision").innerText =
+"⚠ Suspicious behaviour detected. Monitoring increased.";
+
+}
+
+else{
+
+document.getElementById("decision").innerText =
+"🔴 Unknown anomaly detected. Adaptive recovery initiated.";
+
+}
+
+document.getElementById("testResult").innerText =
+"Adaptive analysis completed.";
+
+}
+
+</script>
+
+</body>

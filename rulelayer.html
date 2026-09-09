@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SENTIN-AI | Rule-Based FDIR</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#020d20;
+    color:#e8f4ff;
+}
+
+.page{
+    padding:30px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:#00d9ff;
+}
+
+.status{
+    background:#063c36;
+    padding:10px 18px;
+    border-radius:20px;
+    color:#00ffae;
+}
+
+.card{
+    background:#061a35;
+    border:1px solid #0b416d;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.card h2{
+    color:#00d9ff;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:14px;
+    border-bottom:1px solid #12395b;
+    text-align:left;
+}
+
+th{
+    color:#66d9ff;
+}
+
+.normal{
+    color:#00ffae;
+}
+
+.warning{
+    color:#ffc857;
+}
+
+.critical{
+    color:#ff4545;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:7px;
+    background:#007cff;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#00aaff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<div class="header">
+
+<div>
+<h1>RULE-BASED FDIR</h1>
+<p>Deterministic Fault Detection & Recovery Layer</p>
+</div>
+
+<div class="status">
+● RULE ENGINE ACTIVE
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Rule Engine Status</h2>
+
+<p>
+The rule-based layer compares real-time telemetry
+against predefined safety thresholds.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>Fault Rules</h2>
+
+<table>
+
+<tr>
+<th>Parameter</th>
+<th>Normal Range</th>
+<th>Fault Condition</th>
+<th>Action</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>Bus Voltage</td>
+<td>3.3 – 4.2 V</td>
+<td>&lt; 3.3 V</td>
+<td>Power Isolation</td>
+<td class="normal">ACTIVE</td>
+</tr>
+
+<tr>
+<td>Current</td>
+<td>0 – 0.5 A</td>
+<td>&gt; 0.5 A</td>
+<td>Disconnect Load</td>
+<td class="normal">ACTIVE</td>
+</tr>
+
+<tr>
+<td>Temperature</td>
+<td>0 – 60 °C</td>
+<td>&gt; 60 °C</td>
+<td>Thermal Protection</td>
+<td class="normal">ACTIVE</td>
+</tr>
+
+<tr>
+<td>Communication</td>
+<td>Connected</td>
+<td>Packet Loss</td>
+<td>Restart Communication</td>
+<td class="normal">ACTIVE</td>
+</tr>
+
+<tr>
+<td>Sensor</td>
+<td>Valid</td>
+<td>Stuck / Invalid</td>
+<td>Reject Sensor</td>
+<td class="normal">ACTIVE</td>
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="card">
+
+<h2>Test Rule-Based FDIR</h2>
+
+<button onclick="injectOvercurrent()">
+Inject Overcurrent
+</button>
+
+<button onclick="injectOvertemperature()">
+Inject Overtemperature
+</button>
+
+<button onclick="resetSystem()">
+Reset
+</button>
+
+<p id="result"></p>
+
+</div>
+
+</div>
+
+
+<script>
+
+function injectOvercurrent(){
+
+document.getElementById("result").innerHTML =
+"🔴 OVERCURRENT DETECTED → LOAD ISOLATED → RECOVERY INITIATED";
+
+}
+
+function injectOvertemperature(){
+
+document.getElementById("result").innerHTML =
+"🔴 OVERTEMPERATURE DETECTED → THERMAL PROTECTION ACTIVATED";
+
+}
+
+function resetSystem(){
+
+document.getElementById("result").innerHTML =
+"🟢 SYSTEM RESET → ALL RULES NORMAL";
+
+}
+
+</script>
+
+</body>
+</html>

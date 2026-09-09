@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SENTIN-AI | Mission Simulation</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    margin:0;
+    background:#020d20;
+    color:#e8f4ff;
+    font-family:Arial, sans-serif;
+}
+
+.page{
+    padding:30px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.header h1{
+    color:#00d9ff;
+    margin-bottom:5px;
+}
+
+.status{
+    background:#063c36;
+    color:#00ffae;
+    padding:10px 18px;
+    border-radius:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+.card{
+    background:#061a35;
+    border:1px solid #0b416d;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.card h2{
+    color:#00d9ff;
+    margin-top:0;
+}
+
+.telemetry{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.parameter{
+    background:#04152c;
+    border:1px solid #0b416d;
+    padding:15px;
+    border-radius:8px;
+}
+
+.label{
+    color:#8ca9c4;
+    font-size:14px;
+}
+
+.value{
+    font-size:25px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.normal{
+    color:#00ffae;
+}
+
+.warning{
+    color:#ffc857;
+}
+
+.critical{
+    color:#ff4545;
+}
+
+button{
+    padding:12px 18px;
+    margin:5px;
+    border:0;
+    border-radius:7px;
+    background:#007cff;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#00aaff;
+}
+
+.danger{
+    background:#d92332;
+}
+
+.reset{
+    background:#315273;
+}
+
+.pipeline{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.stage{
+    padding:12px;
+    border-radius:8px;
+    background:#09284a;
+    border:1px solid #155783;
+    text-align:center;
+    min-width:75px;
+}
+
+.active{
+    border-color:#00ffae;
+    color:#00ffae;
+}
+
+.log{
+    background:#031225;
+    padding:12px;
+    border-radius:7px;
+    margin-top:10px;
+    font-size:14px;
+}
+
+#faultStatus{
+    padding:15px;
+    border-radius:8px;
+    background:#062b27;
+    color:#00ffae;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div>
+
+<h1>MISSION SIMULATION</h1>
+
+<p>
+SENTIN-AI Autonomous Fault Detection & Recovery Simulation
+</p>
+
+</div>
+
+<div class="status" id="systemStatus">
+● SIMULATION READY
+</div>
+
+</div>
+
+
+<!-- TELEMETRY -->
+
+<div class="card">
+
+<h2>LIVE SIMULATED TELEMETRY</h2>
+
+<div class="telemetry">
+
+<div class="parameter">
+
+<div class="label">BUS VOLTAGE</div>
+
+<div class="value" id="voltage">
+3.72 V
+</div>
+
+<div class="normal">
+● NORMAL
+</div>
+
+</div>
+
+
+<div class="parameter">
+
+<div class="label">CURRENT</div>
+
+<div class="value" id="current">
+0.24 A
+</div>
+
+<div class="normal">
+● NORMAL
+</div>
+
+</div>
+
+
+<div class="parameter">
+
+<div class="label">TEMPERATURE</div>
+
+<div class="value" id="temperature">
+31.2 °C
+</div>
+
+<div class="normal">
+● NORMAL
+</div>
+
+</div>
+
+
+<div class="parameter">
+
+<div class="label">POWER</div>
+
+<div class="value" id="power">
+0.89 W
+</div>
+
+<div class="normal">
+● NORMAL
+</div>
+
+</div>
+
+
+<div class="parameter">
+
+<div class="label">IMU</div>
+
+<div class="value">
+9.81 m/s²
+</div>
+
+<div class="normal">
+● VALID
+</div>
+
+</div>
+
+
+<div class="parameter">
+
+<div class="label">COMMUNICATION</div>
+
+<div class="value">
+LoRa
+</div>
+
+<div class="normal">
+● CONNECTED
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MAIN GRID -->
+
+<div class="grid">
+
+
+<!-- FAULT INJECTION -->
+
+<div>
+
+<div class="card">
+
+<h2>FAULT INJECTION</h2>
+
+<p>
+Select a fault to simulate a spacecraft abnormal condition.
+</p>
+
+<button class="danger"
+onclick="overcurrent()">
+
+⚡ Inject Overcurrent
+
+</button>
+
+<button class="danger"
+onclick="overtemperature()">
+
+🌡 Inject Overtemperature
+
+</button>
+
+<button class="danger"
+onclick="undervoltage()">
+
+🔋 Inject Undervoltage
+
+</button>
+
+<button class="danger"
+onclick="communicationFault()">
+
+📡 Communication Loss
+
+</button>
+
+<button class="reset"
+onclick="resetSimulation()">
+
+↻ Reset Simulation
+
+</button>
+
+</div>
+
+
+<!-- FDIR PIPELINE -->
+
+<div class="card">
+
+<h2>FDIR STATE MACHINE</h2>
+
+<div class="pipeline">
+
+<div class="stage active">
+Sense
+</div>
+
+→
+
+<div class="stage" id="validate">
+Validate
+</div>
+
+→
+
+<div class="stage" id="analyze">
+Analyze
+</div>
+
+→
+
+<div class="stage" id="detect">
+Detect
+</div>
+
+→
+
+<div class="stage" id="classify">
+Classify
+</div>
+
+→
+
+<div class="stage" id="isolate">
+Isolate
+</div>
+
+→
+
+<div class="stage" id="recover">
+Recover
+</div>
+
+→
+
+<div class="stage" id="verify">
+Verify
+</div>
+
+</div>
+
+</div>
+
+
+<!-- EVENT LOG -->
+
+<div class="card">
+
+<h2>SIMULATION EVENT LOG</h2>
+
+<div id="eventLog">
+
+<div class="log">
+System initialized ✓
+</div>
+
+<div class="log">
+Telemetry stream started ✓
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+
+<div>
+
+<div class="card">
+
+<h2>CURRENT STATUS</h2>
+
+<div id="faultStatus">
+
+🟢 SYSTEM NORMAL
+
+<br><br>
+
+No fault detected.
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>RECOVERY ACTION</h2>
+
+<p id="recovery">
+
+Waiting for fault...
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>FDIR LAYER</h2>
+
+<p id="layer">
+
+No FDIR layer activated.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+function logEvent(message){
+
+const log =
+document.getElementById("eventLog");
+
+const item =
+document.createElement("div");
+
+item.className="log";
+
+item.innerHTML =
+new Date().toLocaleTimeString()
++ " — "
++ message;
+
+log.prepend(item);
+
+}
+
+
+function activatePipeline(){
+
+const stages=[
+"validate",
+"analyze",
+"detect",
+"classify",
+"isolate",
+"recover",
+"verify"
+];
+
+stages.forEach((stage,index)=>{
+
+setTimeout(()=>{
+
+document
+.getElementById(stage)
+.classList.add("active");
+
+},index*500);
+
+});
+
+}
+
+
+function overcurrent(){
+
+document.getElementById("current").innerText="0.92 A";
+
+document.getElementById("current").className=
+"value critical";
+
+document.getElementById("faultStatus").innerHTML=
+"🔴 OVERCURRENT DETECTED<br><br>Severity: CRITICAL";
+
+document.getElementById("layer").innerHTML=
+"RULE-BASED LAYER<br><br>Threshold exceeded: Current > 0.5 A";
+
+document.getElementById("recovery").innerHTML=
+"🔌 LOAD ISOLATION<br><br>MOSFET switch commanded OFF.";
+
+document.getElementById("systemStatus").innerHTML=
+"● FAULT DETECTED";
+
+logEvent("Overcurrent detected");
+
+activatePipeline();
+
+setTimeout(()=>{
+logEvent("Offending load isolated");
+},2500);
+
+setTimeout(()=>{
+logEvent("Recovery verified");
+},4000);
+
+}
+
+
+function overtemperature(){
+
+document.getElementById("temperature").innerText="78 °C";
+
+document.getElementById("temperature").className=
+"value critical";
+
+document.getElementById("faultStatus").innerHTML=
+"🔴 OVERTEMPERATURE DETECTED<br><br>Severity: CRITICAL";
+
+document.getElementById("layer").innerHTML=
+"RULE-BASED LAYER<br><br>Temperature threshold exceeded.";
+
+document.getElementById("recovery").innerHTML=
+"🌡 THERMAL PROTECTION<br><br>High-power load isolated.";
+
+document.getElementById("systemStatus").innerHTML=
+"● FAULT DETECTED";
+
+logEvent("Overtemperature detected");
+
+activatePipeline();
+
+}
+
+
+function undervoltage(){
+
+document.getElementById("voltage").innerText="2.85 V";
+
+document.getElementById("voltage").className=
+"value critical";
+
+document.getElementById("faultStatus").innerHTML=
+"🔴 UNDERVOLTAGE DETECTED<br><br>Severity: HIGH";
+
+document.getElementById("layer").innerHTML=
+"RULE-BASED LAYER<br><br>Voltage below safe threshold.";
+
+document.getElementById("recovery").innerHTML=
+"🔋 POWER PRIORITY RECOVERY<br><br>Non-critical load disconnected.";
+
+document.getElementById("systemStatus").innerHTML=
+"● FAULT DETECTED";
+
+logEvent("Undervoltage detected");
+
+activatePipeline();
+
+}
+
+
+function communicationFault(){
+
+document.getElementById("faultStatus").innerHTML=
+"🟠 COMMUNICATION LOSS<br><br>Ground link unavailable.";
+
+document.getElementById("layer").innerHTML=
+"ADAPTIVE / RULE ANALYSIS<br><br>Communication behaviour abnormal.";
+
+document.getElementById("recovery").innerHTML=
+"📡 COMMUNICATION RECOVERY<br><br>Restart communication interface.";
+
+document.getElementById("systemStatus").innerHTML=
+"● COMMUNICATION FAULT";
+
+logEvent("Communication loss detected");
+
+activatePipeline();
+
+}
+
+
+function resetSimulation(){
+
+document.getElementById("voltage").innerText="3.72 V";
+
+document.getElementById("current").innerText="0.24 A";
+
+document.getElementById("temperature").innerText="31.2 °C";
+
+document.getElementById("voltage").className="value";
+
+document.getElementById("current").className="value";
+
+document.getElementById("temperature").className="value";
+
+document.getElementById("faultStatus").innerHTML=
+"🟢 SYSTEM NORMAL<br><br>No fault detected.";
+
+document.getElementById("recovery").innerText=
+"Waiting for fault...";
+
+document.getElementById("layer").innerText=
+"No FDIR layer activated.";
+
+document.getElementById("systemStatus").innerHTML=
+"● SIMULATION READY";
+
+document
+.querySelectorAll(".stage")
+.forEach(x=>x.classList.remove("active"));
+
+document
+.getElementById("eventLog")
+.innerHTML=
+'<div class="log">System reset ✓</div>';
+
+logEvent("Simulation reset");
+
+}
+
+</script>
+
+</body>
+</html>

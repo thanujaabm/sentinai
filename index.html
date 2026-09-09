@@ -1,1070 +1,907 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ONEFORGE — Autonomous CubeSat Health Monitoring &amp; FDIR Mission Control</title>
+    <title>SENTIN-AI | Autonomous Fault Detection & Recovery</title>
 
-    <!-- Google Fonts: Inter, Space Grotesk, JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-<div class="app-container">
+<header class="topbar">
 
-    <!-- ================= LEFT SIDEBAR ================= -->
-    <aside class="sidebar" id="appSidebar">
+    <div class="brand">
+        <div class="logo">◈</div>
+        <div>
+            <h2>ONEFORGE</h2>
+            <small>Student Spacecraft Technology Platform</small>
+        </div>
+    </div>
 
-        <div class="sidebar-header">
-            <div class="sidebar-logo-icon">✦</div>
+    <div class="title">
+        <h1>SENTIN-AI</h1>
+        <small>Autonomous Fault Detection & Recovery System</small>
+    </div>
+
+    <div class="online">
+        <span class="dot"></span>
+        SYSTEM ONLINE
+    </div>
+
+    <div class="time">
+        <span id="clock">10:42:31</span>
+        <small>UTC</small>
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <button class="nav active" onclick="showPage('dashboard', this)">
+        ◈ Dashboard
+    </button>
+
+    <button class="nav" onclick="showPage('simulation', this)">
+        ◉ Mission Simulation
+    </button>
+
+    <button class="nav" onclick="showPage('analytics', this)">
+        ▥ Analytics
+    </button>
+
+    <button class="nav" onclick="showPage('settings', this)">
+        ⚙ Settings
+    </button>
+
+    <div class="sidebar-bottom">
+        Student Innovation<br>
+        Space Technology
+    </div>
+
+</aside>
+
+
+<main class="content">
+
+
+<!-- =====================================================
+                     DASHBOARD
+====================================================== -->
+
+<section id="dashboard" class="page active-page">
+
+<div class="top-grid">
+
+    <div class="card mission-card">
+        <h3>MISSION MODE</h3>
+
+        <div class="mission-status">
+            <span class="big-dot"></span>
+
             <div>
-                <div class="sidebar-title">ONE<span>FORGE</span></div>
-                <div class="sidebar-version">MISSION CONTROL v2.0</div>
+                <strong id="missionMode">NORMAL</strong>
+                <p id="missionText">
+                    All systems operating nominally
+                </p>
             </div>
         </div>
+    </div>
 
-        <nav class="sidebar-nav">
-            <div class="nav-category">Operations</div>
-            <a href="#dashboard" class="nav-item active" id="navDashboard">
-                <span class="nav-icon">⛯</span>
-                <span>Dashboard</span>
-            </a>
-            <a href="#simulation" class="nav-item" id="navSimulation">
-                <span class="nav-icon">⟁</span>
-                <span>Mission Simulation</span>
-            </a>
-            <a href="#analytics" class="nav-item" id="navAnalytics">
-                <span class="nav-icon">📈</span>
-                <span>Analytics</span>
-            </a>
-            <a href="#settings" class="nav-item" id="navSettings">
-                <span class="nav-icon">⚙</span>
-                <span>Settings</span>
-            </a>
 
-            <div class="nav-category" style="margin-top: 20px;">Subsystems</div>
-            <a href="#health-section" class="nav-item">
-                <span class="nav-icon">♡</span>
-                <span>System Health</span>
-            </a>
-            <a href="#power-section" class="nav-item">
-                <span class="nav-icon">⚡</span>
-                <span>EPS / Power</span>
-            </a>
-            <a href="#fdir-pipeline" class="nav-item">
-                <span class="nav-icon">🛡</span>
-                <span>FDIR Engine</span>
-            </a>
-            <a href="#hardware-panel" class="nav-item">
-                <span class="nav-icon">📡</span>
-                <span>ESP32 Hardware</span>
-            </a>
-        </nav>
+    <div class="card">
 
-        <div class="sidebar-footer">
-            <span class="sidebar-badge">SENTIN-AI POWERED</span>
-            <p class="sidebar-footer-text">
-                <strong>Student Spacecraft Platform</strong><br>
-                Autonomous Ground Station
-            </p>
+        <h3>COMMUNICATION</h3>
+
+        <div class="communication">
+
+            <div>
+                <b>Wi-Fi</b>
+                <span class="green">● Connected</span>
+            </div>
+
+            <div>
+                <b>LoRa</b>
+                <span class="green">● Connected</span>
+            </div>
+
+            <div>
+                <b>Last Contact</b>
+                <span id="lastContact">10:42:31</span>
+            </div>
+
         </div>
 
-    </aside>
+    </div>
 
 
-    <!-- ================= MAIN WRAPPER ================= -->
-    <div class="main-wrapper">
+    <div class="card spacecraft">
 
-        <!-- ================= TOP FLIGHT HEADER ================= -->
-        <header class="mission-header">
+        <div class="cube">▣</div>
 
-            <div class="header-left">
-                <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle Navigation">☰</button>
-                <div class="header-brand-wrap">
-                    <div class="header-title-row">
-                        <span class="header-platform-tag">CubeSat Ground Station</span>
-                        <strong style="font-family: var(--font-heading); font-size: 16px; letter-spacing: 1px; color: var(--text-bright);">ONEFORGE</strong>
-                    </div>
-                    <span class="header-subtext">Student Spacecraft Technology Platform &bull; ONEFORGE-01</span>
-                </div>
-            </div>
-
-            <div class="header-center">
-                <div class="system-lead">SENTIN-AI</div>
-                <div class="system-sublead">Autonomous Fault Detection &amp; Recovery System</div>
-            </div>
-
-            <div class="header-right">
-
-                <div class="link-indicators">
-                    <span class="badge link offline" id="linkBadge">✕ LINK: OFFLINE</span>
-                    <span class="badge simulation" id="simBadge">SIMULATED SENSORS ACTIVE</span>
-                </div>
-
-                <div class="system-status-indicator online" id="systemOnlineIndicator">
-                    <span class="status-pulse-dot" id="systemStatusDot"></span>
-                    <span class="status-indicator-text" id="systemOnlineText">SYSTEM ONLINE</span>
-                </div>
-
-                <div class="clock-display">
-                    <div class="clock-row">
-                        <span class="clock-time" id="clockTime">--:--:--</span>
-                        <span class="clock-zone">LOC</span>
-                        <span style="color: var(--text-muted); font-size: 10px;">|</span>
-                        <span class="clock-time" id="clockTimeUtc" style="color: var(--cyan);">--:--:--</span>
-                        <span class="clock-zone">UTC</span>
-                    </div>
-                    <span class="clock-date" id="clockDate">Loading date...</span>
-                </div>
-
-            </div>
-
-        </header>
-
-
-        <!-- ================= DASHBOARD CONTENT ================= -->
-        <main class="dashboard-content" id="dashboard">
-
-            <!-- ================= ROW 1: MISSION OVERVIEW ================= -->
-            <section class="overview-grid">
-
-                <!-- Card 1: Mission Mode -->
-                <div class="card highlighted">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">◈</span>
-                            <span class="card-title">Mission Mode</span>
-                        </div>
-                        <span class="badge-tech real" id="missionModeBadge">NOMINAL</span>
-                    </div>
-                    <div class="mission-mode-content">
-                        <div class="mode-indicator-circle" id="missionModeCircle">
-                            <span class="mode-icon" id="missionModeIcon">✓</span>
-                        </div>
-                        <div class="mode-details">
-                            <div class="mode-status-text" id="missionModeStatus">NORMAL</div>
-                            <div class="mode-description" id="missionModeDesc">All systems operating nominally</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Communication Links -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">📡</span>
-                            <span class="card-title">Communication</span>
-                        </div>
-                        <span class="card-action-text" id="comLastContactHeader">Last Contact: --:--:--</span>
-                    </div>
-                    <div class="com-links-list">
-                        <div class="com-link-row">
-                            <div class="com-link-name">
-                                <span style="color: var(--blue);">📶</span>
-                                <span>Wi-Fi (Local Link)</span>
-                            </div>
-                            <span class="badge-tech offline" id="comWifiStatus">OFFLINE</span>
-                        </div>
-                        <div class="com-link-row">
-                            <div class="com-link-name">
-                                <span style="color: var(--yellow);">🛰</span>
-                                <span>LoRa (Ground Link)</span>
-                            </div>
-                            <span class="badge-tech sim" id="comLoraStatus">SIMULATED</span>
-                        </div>
-                        <div class="com-link-row">
-                            <div class="com-link-name">
-                                <span style="color: var(--cyan);">⏱</span>
-                                <span>Heartbeat &bull; Packet Loss</span>
-                            </div>
-                            <span class="com-link-val" id="comTelemetryStats">1.0s &bull; 0.0% loss</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Spacecraft Identity -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">🛰</span>
-                            <span class="card-title">Spacecraft Identity</span>
-                        </div>
-                        <span class="badge-tech info">1U CUBESAT</span>
-                    </div>
-                    <div class="identity-content">
-                        <div class="identity-header">
-                            <div>
-                                <div class="sat-id">ONEFORGE-01</div>
-                                <div class="sat-desc">Student CubeSat Technology Demonstrator</div>
-                            </div>
-                            <span class="badge-tech real">ORBITAL OP</span>
-                        </div>
-                        <div class="lifecycle-stepper">
-                            <div class="lifecycle-track">
-                                <div class="lifecycle-progress-fill" id="lifecycleProgress"></div>
-                            </div>
-                            <div class="lifecycle-step completed">
-                                <div class="step-dot">✓</div>
-                                <span class="step-label">Design</span>
-                            </div>
-                            <div class="lifecycle-step completed">
-                                <div class="step-dot">✓</div>
-                                <span class="step-label">Build</span>
-                            </div>
-                            <div class="lifecycle-step active">
-                                <div class="step-dot">●</div>
-                                <span class="step-label">Operate</span>
-                            </div>
-                            <div class="lifecycle-step">
-                                <div class="step-dot"></div>
-                                <span class="step-label">Verify</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-
-            <!-- ================= ROW 2: SYSTEM HEALTH & POWER (EPS) ================= -->
-            <section class="health-and-power-grid" id="health-section">
-
-                <!-- System Health & Subsystems -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">♡</span>
-                            <span class="card-title">System Health &amp; Subsystems</span>
-                        </div>
-                        <span class="card-action-text" id="healthEvalSource">EVAL: REAL-TIME FDIR</span>
-                    </div>
-
-                    <div class="health-container">
-                        <!-- Circular Health Score -->
-                        <div class="health-ring-wrapper">
-                            <div class="health-svg-wrap">
-                                <svg class="health-svg" viewBox="0 0 140 140">
-                                    <circle class="health-ring-bg" cx="70" cy="70" r="58"></circle>
-                                    <circle class="health-ring-val" id="healthRingCircle" cx="70" cy="70" r="58"></circle>
-                                </svg>
-                                <div class="health-ring-text-center">
-                                    <div class="health-number" id="healthScoreNum">100</div>
-                                    <div class="health-denom">/ 100</div>
-                                </div>
-                            </div>
-                            <div class="health-label">OVERALL HEALTH SCORE</div>
-                        </div>
-
-                        <!-- Horizontal Health Bars -->
-                        <div class="subsystems-bars">
-                            <div class="subsystem-bar-row">
-                                <span class="subsystem-code">OBC</span>
-                                <div class="subsystem-track"><div class="subsystem-fill" id="fillOBC" style="width: 98%;"></div></div>
-                                <span class="subsystem-percent" id="pctOBC">98%</span>
-                            </div>
-                            <div class="subsystem-bar-row">
-                                <span class="subsystem-code">EPS</span>
-                                <div class="subsystem-track"><div class="subsystem-fill" id="fillEPS" style="width: 95%;"></div></div>
-                                <span class="subsystem-percent" id="pctEPS">95%</span>
-                            </div>
-                            <div class="subsystem-bar-row">
-                                <span class="subsystem-code">SNS</span>
-                                <div class="subsystem-track"><div class="subsystem-fill" id="fillSNS" style="width: 99%;"></div></div>
-                                <span class="subsystem-percent" id="pctSNS">99%</span>
-                            </div>
-                            <div class="subsystem-bar-row">
-                                <span class="subsystem-code">COM</span>
-                                <div class="subsystem-track"><div class="subsystem-fill" id="fillCOM" style="width: 88%;"></div></div>
-                                <span class="subsystem-percent" id="pctCOM">88%</span>
-                            </div>
-                            <div class="subsystem-bar-row">
-                                <span class="subsystem-code">FDIR</span>
-                                <div class="subsystem-track"><div class="subsystem-fill" id="fillFDIR" style="width: 100%;"></div></div>
-                                <span class="subsystem-percent" id="pctFDIR">100%</span>
-                            </div>
-                            <div class="subsystem-bar-row">
-                                <span class="subsystem-code">ADCS</span>
-                                <div class="subsystem-track"><div class="subsystem-fill" id="fillADCS" style="width: 94%;"></div></div>
-                                <span class="subsystem-percent" id="pctADCS">94%</span>
-                            </div>
-                            <div class="subsystem-bar-row">
-                                <span class="subsystem-code">STR</span>
-                                <div class="subsystem-track"><div class="subsystem-fill" id="fillSTR" style="width: 96%;"></div></div>
-                                <span class="subsystem-percent" id="pctSTR">96%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Subsystem Status Badges (7 Cards) -->
-                    <div class="subsystem-grid">
-                        <div class="subsystem-card" id="subCardOBC">
-                            <span class="subsystem-card-icon">🖳</span>
-                            <span class="subsystem-card-name">OBC</span>
-                            <span class="subsystem-status-badge" id="subBadgeOBC"><span class="subsystem-card-dot"></span>Online</span>
-                        </div>
-                        <div class="subsystem-card" id="subCardEPS">
-                            <span class="subsystem-card-icon">⚡</span>
-                            <span class="subsystem-card-name">EPS</span>
-                            <span class="subsystem-status-badge" id="subBadgeEPS"><span class="subsystem-card-dot"></span>Online</span>
-                        </div>
-                        <div class="subsystem-card" id="subCardSNS">
-                            <span class="subsystem-card-icon">🌡</span>
-                            <span class="subsystem-card-name">SNS</span>
-                            <span class="subsystem-status-badge" id="subBadgeSNS"><span class="subsystem-card-dot"></span>Online</span>
-                        </div>
-                        <div class="subsystem-card" id="subCardCOM">
-                            <span class="subsystem-card-icon">📡</span>
-                            <span class="subsystem-card-name">COM</span>
-                            <span class="subsystem-status-badge" id="subBadgeCOM"><span class="subsystem-card-dot"></span>Active</span>
-                        </div>
-                        <div class="subsystem-card" id="subCardFDIR">
-                            <span class="subsystem-card-icon">🛡</span>
-                            <span class="subsystem-card-name">FDIR</span>
-                            <span class="subsystem-status-badge" id="subBadgeFDIR"><span class="subsystem-card-dot"></span>Active</span>
-                        </div>
-                        <div class="subsystem-card" id="subCardADCS">
-                            <span class="subsystem-card-icon">🧭</span>
-                            <span class="subsystem-card-name">ADCS</span>
-                            <span class="subsystem-status-badge" id="subBadgeADCS"><span class="subsystem-card-dot"></span>Online</span>
-                        </div>
-                        <div class="subsystem-card" id="subCardSTR">
-                            <span class="subsystem-card-icon">⚙</span>
-                            <span class="subsystem-card-name">STR</span>
-                            <span class="subsystem-status-badge" id="subBadgeSTR"><span class="subsystem-card-dot"></span>OK</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Power Management (EPS) -->
-                <div class="card" id="power-section">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">⚡</span>
-                            <span class="card-title">Power Management (EPS)</span>
-                        </div>
-                        <span class="badge-tech sim">SIMULATED &bull; INA219</span>
-                    </div>
-
-                    <div class="power-metrics-row">
-                        <div class="power-metric-box">
-                            <div class="power-metric-label">Bus Voltage</div>
-                            <div class="power-metric-val"><span id="busVoltage">--.--</span> <small>V</small></div>
-                        </div>
-                        <div class="power-metric-box">
-                            <div class="power-metric-label">Total Current</div>
-                            <div class="power-metric-val"><span id="powerCurrent">--.--</span> <small>A</small></div>
-                        </div>
-                        <div class="power-metric-box">
-                            <div class="power-metric-label">Active Power</div>
-                            <div class="power-metric-val"><span id="powerPower">--.--</span> <small>W</small></div>
-                        </div>
-                    </div>
-
-                    <!-- 3-Tier Power Priority Matrix -->
-                    <div class="card-title-group" style="margin-bottom: 8px;">
-                        <span class="card-icon" style="font-size: 11px;">≣</span>
-                        <span class="card-title" style="font-size: 11px;">Autonomous Load Shedding Priority</span>
-                    </div>
-                    <div class="power-priorities-list">
-                        <div class="power-priority-item active-priority" id="prioP1">
-                            <div class="priority-left">
-                                <span class="priority-pill">P1</span>
-                                <div>
-                                    <div class="priority-desc">Critical Systems</div>
-                                    <div class="priority-subsystems">OBC / FDIR / Sensing Bus</div>
-                                </div>
-                            </div>
-                            <span class="priority-status" id="statusP1">PROTECTED</span>
-                        </div>
-                        <div class="power-priority-item" id="prioP2">
-                            <div class="priority-left">
-                                <span class="priority-pill">P2</span>
-                                <div>
-                                    <div class="priority-desc">Operational Link</div>
-                                    <div class="priority-subsystems">COM Transceiver / ADCS Wheels</div>
-                                </div>
-                            </div>
-                            <span class="priority-status" id="statusP2">ACTIVE</span>
-                        </div>
-                        <div class="power-priority-item" id="prioP3">
-                            <div class="priority-left">
-                                <span class="priority-pill">P3</span>
-                                <div>
-                                    <div class="priority-desc">Non-Critical Load</div>
-                                    <div class="priority-subsystems">Experimental Payload &bull; Shed on Fault</div>
-                                </div>
-                            </div>
-                            <span class="priority-status" id="statusP3">ONLINE</span>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-
-            <!-- ================= ROW 3: LIVE TELEMETRY & SENSOR VALIDATION ================= -->
-            <section class="telemetry-and-sensors-grid">
-
-                <!-- Telemetry Grid (Preserving all original IDs) -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">⛯</span>
-                            <span class="card-title">Live Spacecraft Telemetry</span>
-                        </div>
-                        <span class="card-action-text">ESP32 STREAM &bull; 1 Hz</span>
-                    </div>
-
-                    <div class="telemetry-grid">
-
-                        <!-- Temperature -->
-                        <div class="telemetry-card">
-                            <span class="telemetry-label">Temperature</span>
-                            <div class="telemetry-value-row">
-                                <span class="telemetry-value" id="temperature">--.-</span>
-                                <span class="telemetry-unit">°C</span>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech real">REAL &bull; BMP280</span>
-                                <span class="nominal-badge" id="tempState">NOMINAL</span>
-                            </div>
-                        </div>
-
-                        <!-- Pressure -->
-                        <div class="telemetry-card">
-                            <span class="telemetry-label">Pressure</span>
-                            <div class="telemetry-value-row">
-                                <span class="telemetry-value" id="pressure">----.-</span>
-                                <span class="telemetry-unit">hPa</span>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech real">REAL &bull; BMP280</span>
-                                <span class="nominal-badge" id="pressureState">NOMINAL</span>
-                            </div>
-                        </div>
-
-                        <!-- Humidity / Env -->
-                        <div class="telemetry-card">
-                            <span class="telemetry-label">Relative Humidity</span>
-                            <div class="telemetry-value-row">
-                                <span class="telemetry-value" id="humidity">48.2</span>
-                                <span class="telemetry-unit">%</span>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech sim">SIM &bull; SHT31</span>
-                                <span class="nominal-badge" id="humidityState">NOMINAL</span>
-                            </div>
-                        </div>
-
-                        <!-- Bus Voltage -->
-                        <div class="telemetry-card">
-                            <span class="telemetry-label">Bus Voltage</span>
-                            <div class="telemetry-value-row">
-                                <span class="telemetry-value" id="voltage">-.--</span>
-                                <span class="telemetry-unit">V</span>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech sim">SIMULATED &bull; ESP32</span>
-                                <span class="nominal-badge" id="voltageState">NOMINAL</span>
-                            </div>
-                        </div>
-
-                        <!-- Load Current -->
-                        <div class="telemetry-card">
-                            <span class="telemetry-label">Load Current</span>
-                            <div class="telemetry-value-row">
-                                <span class="telemetry-value" id="current">-.--</span>
-                                <span class="telemetry-unit">A</span>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech sim">SIMULATED &bull; ESP32</span>
-                                <span class="nominal-badge" id="currentState">NOMINAL</span>
-                            </div>
-                        </div>
-
-                        <!-- Load Power -->
-                        <div class="telemetry-card">
-                            <span class="telemetry-label">Load Power</span>
-                            <div class="telemetry-value-row">
-                                <span class="telemetry-value" id="power">-.--</span>
-                                <span class="telemetry-unit">W</span>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech sim">SIMULATED &bull; ESP32</span>
-                                <span class="nominal-badge" id="powerState">NOMINAL</span>
-                            </div>
-                        </div>
-
-                        <!-- Accelerometer (IMU) -->
-                        <div class="telemetry-card motion-card">
-                            <span class="telemetry-label">Accelerometer (m/s²)</span>
-                            <div class="axis-grid">
-                                <div class="axis-box"><span class="axis-tag">X</span><span class="axis-num" id="accelX">0.00</span></div>
-                                <div class="axis-box"><span class="axis-tag">Y</span><span class="axis-num" id="accelY">0.00</span></div>
-                                <div class="axis-box"><span class="axis-tag">Z</span><span class="axis-num" id="accelZ">1.00</span></div>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech sim">SIMULATED &bull; MPU6050</span>
-                                <span class="nominal-badge">1.00 G</span>
-                            </div>
-                        </div>
-
-                        <!-- Gyroscope (IMU) -->
-                        <div class="telemetry-card motion-card">
-                            <span class="telemetry-label">Gyroscope (°/s)</span>
-                            <div class="axis-grid">
-                                <div class="axis-box"><span class="axis-tag">X</span><span class="axis-num" id="gyroX">0.00</span></div>
-                                <div class="axis-box"><span class="axis-tag">Y</span><span class="axis-num" id="gyroY">0.00</span></div>
-                                <div class="axis-box"><span class="axis-tag">Z</span><span class="axis-num" id="gyroZ">0.00</span></div>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech sim">SIMULATED &bull; MPU6050</span>
-                                <span class="nominal-badge">STABLE</span>
-                            </div>
-                        </div>
-
-                        <!-- Magnetometer (ADCS) -->
-                        <div class="telemetry-card motion-card">
-                            <span class="telemetry-label">Magnetic Field (μT)</span>
-                            <div class="axis-grid">
-                                <div class="axis-box"><span class="axis-tag">X</span><span class="axis-num" id="magX">24.5</span></div>
-                                <div class="axis-box"><span class="axis-tag">Y</span><span class="axis-num" id="magY">-18.2</span></div>
-                                <div class="axis-box"><span class="axis-tag">Z</span><span class="axis-num" id="magZ">42.1</span></div>
-                            </div>
-                            <div class="telemetry-footer-row">
-                                <span class="badge-tech sim">SIMULATED &bull; ADCS</span>
-                                <span class="nominal-badge">ALIGNED</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Sensor Validation Matrix -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">✓</span>
-                            <span class="card-title">Sensor Validation</span>
-                        </div>
-                        <span class="badge-tech info">CONSISTENCY</span>
-                    </div>
-
-                    <table class="sensor-validation-table">
-                        <thead>
-                            <tr>
-                                <th>Sensor</th>
-                                <th>Telemetry</th>
-                                <th>Confidence</th>
-                                <th>Check</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="sensor-name">BMP280</span> <span class="badge-tech real" style="font-size: 8px;">REAL</span></td>
-                                <td><span class="sensor-val" id="valSensorBmp">--.- °C</span></td>
-                                <td><span class="sensor-confidence" id="confSensorBmp">98%</span></td>
-                                <td><span class="sensor-check" id="checkSensorBmp">✓</span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="sensor-name">DHT22</span> <span class="badge-tech sim" style="font-size: 8px;">SIM</span></td>
-                                <td><span class="sensor-val" id="valSensorDht">28.5 °C</span></td>
-                                <td><span class="sensor-confidence">95%</span></td>
-                                <td><span class="sensor-check">✓</span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="sensor-name">DS18B20</span> <span class="badge-tech sim" style="font-size: 8px;">SIM</span></td>
-                                <td><span class="sensor-val" id="valSensorDs">28.2 °C</span></td>
-                                <td><span class="sensor-confidence">96%</span></td>
-                                <td><span class="sensor-check">✓</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="sensor-status-banner" id="sensorConsistencyBanner">
-                        <span class="sensor-status-title">SENSOR INTEGRITY</span>
-                        <span class="sensor-status-val" id="sensorConsistencyStatus">STATUS: CONSISTENT</span>
-                    </div>
-
-                    <!-- Communication Diagnostics Detail -->
-                    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
-                        <div class="card-title" style="font-size: 10px; margin-bottom: 8px;">COMMUNICATION STATUS</div>
-                        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11px;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="color: var(--text-muted);">Wi-Fi AP SSID:</span>
-                                <span style="font-family: var(--font-mono); color: var(--text-bright);">OneForge-CubeSat</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="color: var(--text-muted);">Ground IP:</span>
-                                <span style="font-family: var(--font-mono); color: var(--cyan);">192.168.4.1</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="color: var(--text-muted);">Ground Link:</span>
-                                <span style="font-family: var(--font-mono); color: var(--yellow);">LoRa (Simulated 433MHz)</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="color: var(--text-muted);">Packet Loss:</span>
-                                <span style="font-family: var(--font-mono); color: var(--green);" id="detailPacketLoss">0.0%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-
-            <!-- ================= ROW 4: FDIR STATE MACHINE PIPELINE ================= -->
-            <section class="card fdir-pipeline-card" id="fdir-pipeline">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <span class="card-icon">⚙</span>
-                        <span class="card-title">FDIR State Machine &bull; Autonomous Progression</span>
-                    </div>
-                    <span class="badge-tech real" id="fdirActiveStepLabel">ACTIVE: SENSE</span>
-                </div>
-
-                <div class="fdir-pipeline-track">
-                    <div class="pipeline-connector-line"></div>
-
-                    <div class="pipeline-node active" id="nodeSense">
-                        <div class="node-circle">01</div>
-                        <span class="node-title">Sense</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeValidate">
-                        <div class="node-circle">02</div>
-                        <span class="node-title">Validate</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeAnalyze">
-                        <div class="node-circle">03</div>
-                        <span class="node-title">Analyze</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeDetect">
-                        <div class="node-circle">04</div>
-                        <span class="node-title">Detect</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeClassify">
-                        <div class="node-circle">05</div>
-                        <span class="node-title">Classify</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeIsolate">
-                        <div class="node-circle">06</div>
-                        <span class="node-title">Isolate</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeRecover">
-                        <div class="node-circle">07</div>
-                        <span class="node-title">Recover</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeVerify">
-                        <div class="node-circle">08</div>
-                        <span class="node-title">Verify</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeLog">
-                        <div class="node-circle">09</div>
-                        <span class="node-title">Log</span>
-                    </div>
-                    <div class="pipeline-node" id="nodeContinue">
-                        <div class="node-circle">10</div>
-                        <span class="node-title">Continue</span>
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- ================= ROW 5: MISSION TIMELINE & FDIR STATUS CARDS ================= -->
-            <section class="timeline-and-status-grid">
-
-                <!-- Mission Timeline -->
-                <div class="card" id="simulation">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">⏱</span>
-                            <span class="card-title">Mission Timeline</span>
-                        </div>
-                        <span class="badge-tech real" id="timelineStateBadge">RUNNING</span>
-                    </div>
-
-                    <div class="timeline-card-content">
-                        <div class="timeline-phase-row">
-                            <div>
-                                <span class="phase-title" id="timelinePhaseName">Nominal Orbit Operations</span>
-                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Target: CubeSat Telemetry Stream</div>
-                            </div>
-                            <span class="phase-counter" id="timelinePhaseCounter">Phase 07 / 16</span>
-                        </div>
-
-                        <div class="timeline-progress-bar">
-                            <div class="timeline-progress-fill" id="timelineProgressFill" style="width: 44%;"></div>
-                        </div>
-
-                        <div class="timeline-controls">
-                            <button class="btn-timeline" id="btnTimelineStart" onclick="startTimeline()">▶ START</button>
-                            <button class="btn-timeline" id="btnTimelinePause" onclick="pauseTimeline()">⏸ PAUSE</button>
-                            <button class="btn-timeline" id="btnTimelineReset" onclick="resetTimeline()">↻ RESET</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 5 FDIR Status Cards (Preserving all original IDs) -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">🛡</span>
-                            <span class="card-title">FDIR Status &bull; Subsystem Health</span>
-                        </div>
-                        <span class="card-action-text">ACTIVE MONITORING</span>
-                    </div>
-
-                    <div class="fdir-cards-grid">
-
-                        <!-- Fault Card -->
-                        <div class="fdir-card">
-                            <div class="fdir-icon">⚠</div>
-                            <div class="fdir-label">FAULT</div>
-                            <div class="fdir-value normal-text" id="faultStatus">NORMAL</div>
-                            <p class="fdir-desc" id="faultDescription">No active fault</p>
-                        </div>
-
-                        <!-- Severity Card -->
-                        <div class="fdir-card">
-                            <div class="fdir-icon">◈</div>
-                            <div class="fdir-label">SEVERITY</div>
-                            <div class="fdir-value normal-text" id="severityStatus">NORMAL</div>
-                            <p class="fdir-desc" id="severityDescription">System operating normally</p>
-                        </div>
-
-                        <!-- FDIR State Card -->
-                        <div class="fdir-card">
-                            <div class="fdir-icon">⚙</div>
-                            <div class="fdir-label">FDIR STATE</div>
-                            <div class="fdir-value blue-text" id="fdirState">MONITOR</div>
-                            <p class="fdir-desc" id="stateDescription">Monitoring telemetry</p>
-                        </div>
-
-                        <!-- Action Card -->
-                        <div class="fdir-card">
-                            <div class="fdir-icon">ϟ</div>
-                            <div class="fdir-label">ACTION</div>
-                            <div class="fdir-value blue-text" id="actionStatus">MONITOR</div>
-                            <p class="fdir-desc" id="actionDescription">No corrective action</p>
-                        </div>
-
-                        <!-- Recovery Card -->
-                        <div class="fdir-card">
-                            <div class="fdir-icon">↻</div>
-                            <div class="fdir-label">RECOVERY</div>
-                            <div class="fdir-value success-text" id="recoveryStatus">IDLE</div>
-                            <p class="fdir-desc" id="recoveryDescription">System stable</p>
-                        </div>
-
-                    </div>
-                </div>
-
-            </section>
-
-
-            <!-- ================= ROW 6: LIVE MONITORING CHARTS (5 CHARTS) ================= -->
-            <section class="card" id="analytics">
-                <div class="charts-section-header">
-                    <div class="card-title-group">
-                        <span class="card-icon">📈</span>
-                        <span class="charts-title">Live Telemetry &amp; FDIR Monitoring</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">(Rolling 60 Seconds)</span>
-                        <span class="badge-tech real">● LIVE TELEMETRY</span>
-                    </div>
-                </div>
-
-                <div class="charts-grid-5">
-
-                    <!-- Chart 1: Health Trend -->
-                    <div class="chart-card">
-                        <div class="chart-heading">
-                            <div>
-                                <h3>HEALTH SCORE TREND</h3>
-                                <p>Overall Spacecraft Health (%)</p>
-                            </div>
-                            <span class="chart-state green-state" id="healthChartState">● 100%</span>
-                        </div>
-                        <div class="chart-wrapper">
-                            <canvas id="healthChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Chart 2: Power Trend -->
-                    <div class="chart-card">
-                        <div class="chart-heading">
-                            <div>
-                                <h3>POWER &amp; VOLTAGE</h3>
-                                <p>Bus Voltage (V) &bull; Power (W)</p>
-                            </div>
-                            <span class="chart-state green-state" id="powerChartState">● NOMINAL</span>
-                        </div>
-                        <div class="chart-wrapper">
-                            <canvas id="powerChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Chart 3: Temperature Trend -->
-                    <div class="chart-card">
-                        <div class="chart-heading">
-                            <div>
-                                <h3>TEMPERATURE PROFILE</h3>
-                                <p>BMP280 Real Sensor (°C)</p>
-                            </div>
-                            <span class="chart-state green-state" id="tempChartState">● NOMINAL</span>
-                        </div>
-                        <div class="chart-wrapper">
-                            <canvas id="tempChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Chart 4: Fault Activity (Preserved ID) -->
-                    <div class="chart-card">
-                        <div class="chart-heading">
-                            <div>
-                                <h3>FAULT ACTIVITY</h3>
-                                <p>Fault Detection Signal &amp; Threshold</p>
-                            </div>
-                            <span class="chart-state green-state" id="faultChartState">● IDLE</span>
-                        </div>
-                        <div class="chart-wrapper">
-                            <canvas id="faultChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Chart 5: Recovery Progress & Severity (Preserved IDs) -->
-                    <div class="chart-card">
-                        <div class="chart-heading">
-                            <div>
-                                <h3>RECOVERY &amp; SEVERITY PROGRESS</h3>
-                                <p>FDIR State Transitions Over Time</p>
-                            </div>
-                            <div style="display: flex; gap: 6px;">
-                                <span class="chart-state severity-state" id="severityChartState">● NORMAL</span>
-                                <span class="chart-state green-state" id="recoveryChartState">● IDLE</span>
-                            </div>
-                        </div>
-                        <div class="chart-wrapper">
-                            <canvas id="recoveryChart"></canvas>
-                        </div>
-                        <div style="display: none;"><canvas id="severityChart"></canvas></div>
-                    </div>
-
-                </div>
-            </section>
-
-
-            <!-- ================= ROW 7: LOWER SECTION (ANOMALY PANEL, LOG, CONTROLS) ================= -->
-            <section class="lower-control-grid">
-
-                <!-- Current Anomaly Status Panel -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">⚡</span>
-                            <span class="card-title">Current Status</span>
-                        </div>
-                        <span class="badge-tech real" id="anomalyBadge">NOMINAL</span>
-                    </div>
-
-                    <div class="current-anomaly-content">
-                        <div class="anomaly-headline" id="anomalyHeadlineBox">
-                            <div class="anomaly-status-title" id="anomalyStatusTitle">SYSTEM HEALTHY</div>
-                            <div class="anomaly-status-sub" id="anomalyStatusSub">No anomaly conditions detected. All buses operating within nominal parameters.</div>
-                        </div>
-
-                        <div class="anomaly-fields-grid">
-                            <div class="anomaly-field">
-                                <span class="anomaly-field-label">Affected Subsystem</span>
-                                <div class="anomaly-field-val" id="anomalySubsystem">NONE (NOMINAL)</div>
-                            </div>
-                            <div class="anomaly-field">
-                                <span class="anomaly-field-label">Fault Severity</span>
-                                <div class="anomaly-field-val" id="anomalySeverity">NORMAL (LEVEL 0)</div>
-                            </div>
-                            <div class="anomaly-field">
-                                <span class="anomaly-field-label">Autonomous Action</span>
-                                <div class="anomaly-field-val" id="anomalyAction">CONTINUOUS SENSE</div>
-                            </div>
-                            <div class="anomaly-field">
-                                <span class="anomaly-field-label">Recovery Result</span>
-                                <div class="anomaly-field-val" id="anomalyResult">STABLE</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FDIR Event Log (Preserving original eventLog ID) -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">📋</span>
-                            <span class="card-title">FDIR Event Log</span>
-                        </div>
-                        <span class="card-action-text">CHRONOLOGICAL</span>
-                    </div>
-
-                    <div class="event-list" id="eventLog">
-                        <!-- Populated dynamically by addEvent() -->
-                    </div>
-                </div>
-
-                <!-- Prototype Controls (Preserving all original function hooks) -->
-                <div class="card" id="settings">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <span class="card-icon">⚙</span>
-                            <span class="card-title">Prototype Controls</span>
-                        </div>
-                        <span class="badge-tech sim">GROUND TEST</span>
-                    </div>
-
-                    <div class="controls-container">
-                        <p class="controls-desc">
-                            Execute autonomous FDIR demonstration routines. Triggers fault injection, isolation, load-shedding, and verified recovery.
-                        </p>
-
-                        <div class="control-buttons-grid">
-                            <button class="btn-control fault-button" onclick="injectOvercurrent()" id="btnInjectOvercurrent">
-                                ⚠ &nbsp; INJECT OVERCURRENT
-                            </button>
-
-                            <button class="btn-control normal-button" onclick="forceNormal()" id="btnForceNormal">
-                                ✦ &nbsp; NORMAL
-                            </button>
-
-                            <button class="btn-control success-button" onclick="showSuccess()" id="btnShowSuccess">
-                                ◆ &nbsp; SUCCESS
-                            </button>
-
-                            <button class="btn-control reset-button" onclick="resetSystem()" id="btnResetSystem">
-                                ↻ &nbsp; RESET SYSTEM
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-
-            <!-- ================= HARDWARE & ESP32 DEVICE PANEL (PRESERVED) ================= -->
-            <section class="dev-telemetry-panel" id="devTelemetryPanel">
-
-                <div class="dev-panel-header">
-                    <div class="dev-panel-title">
-                        <span class="dev-pulse-dot" id="devStatusDot"></span>
-                        <span>ONEFORGE DEVICE CONNECTION &bull; ESP32 GROUND INTERFACE</span>
-                        <span class="dev-badge offline" id="devConnectionStatus">OFFLINE</span>
-                    </div>
-
-                    <div class="dev-panel-actions">
-                        <span class="dev-endpoint" id="devEndpoint">http://192.168.4.1/api/telemetry</span>
-                        <span class="dev-update-time" id="devLastUpdate">Last Update: —</span>
-                    </div>
-                </div>
-
-                <div class="dev-error-banner" id="devErrorBanner">
-                    <span>ℹ</span>
-                    <span id="devErrorMessage">Connect to Wi-Fi network <strong>OneForge-CubeSat</strong> to stream live ESP32 telemetry.</span>
-                </div>
-
-                <div class="dev-grid">
-                    <div class="dev-card">
-                        <span class="dev-label">DEVICE ID</span>
-                        <strong class="dev-value" id="devDeviceId">ONEFORGE-CUBESAT-01</strong>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">IP ADDRESS</span>
-                        <strong class="dev-value" id="devIp">192.168.4.1</strong>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">STATUS</span>
-                        <strong class="dev-value" id="devStatus">NORMAL</strong>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">HEALTH SCORE</span>
-                        <strong class="dev-value" id="devHealth">100%</strong>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">TEMPERATURE</span>
-                        <strong class="dev-value"><span id="devTemp">--.-</span> <small>°C</small></strong>
-                        <small class="dev-source badge-tech real" id="devBmpSource">REAL &bull; BMP280</small>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">PRESSURE</span>
-                        <strong class="dev-value"><span id="devPressure">----.-</span> <small>hPa</small></strong>
-                        <small class="dev-source badge-tech real">REAL &bull; BMP280</small>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">BUS VOLTAGE</span>
-                        <strong class="dev-value"><span id="devVoltage">-.--</span> <small>V</small></strong>
-                        <small class="dev-source badge-tech sim">SIMULATED &bull; ESP32</small>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">LOAD CURRENT</span>
-                        <strong class="dev-value"><span id="devCurrent">-.--</span> <small>A</small></strong>
-                        <small class="dev-source badge-tech sim">SIMULATED &bull; ESP32</small>
-                    </div>
-
-                    <div class="dev-card">
-                        <span class="dev-label">LOAD POWER</span>
-                        <strong class="dev-value"><span id="devPower">-.--</span> <small>W</small></strong>
-                        <small class="dev-source badge-tech sim">SIMULATED &bull; ESP32</small>
-                    </div>
-
-                    <div class="dev-card dev-card-wide">
-                        <span class="dev-label">MOTION (ACCEL / GYRO)</span>
-                        <strong class="dev-value" id="devMotionSummary" style="font-size: 11px;">A: 0.00, 0.00, 1.00 | G: 0.0, 0.0, 0.0</strong>
-                        <small class="dev-source badge-tech sim">SIMULATED &bull; ESP32</small>
-                    </div>
-
-                    <div class="dev-card dev-card-wide">
-                        <span class="dev-label">SYSTEM MESSAGE</span>
-                        <strong class="dev-value" id="systemMessage" style="font-size: 11px; color: var(--text-muted);">OFFLINE — AWAITING ESP32</strong>
-                    </div>
-                </div>
-
-            </section>
-
-        </main>
-
-
-        <!-- ================= FOOTER ================= -->
-        <footer class="mission-footer">
-            <div>
-                ONEFORGE CubeSat v2.0 &bull; Ground Station Demonstration &bull; SENTIN-AI Autonomous FDIR System
-            </div>
-            <div>
-                Authoritative Hardware Link: <code>http://192.168.4.1/api/telemetry</code>
-            </div>
-        </footer>
+        <div>
+            <h2>ONEFORGE-01</h2>
+            <p>Student CubeSat<br>
+            Technology Demonstrator</p>
+        </div>
 
     </div>
 
 </div>
 
 
-<!-- Load Application Scripts -->
-<script src="config.js"></script>
-<script src="telemetryService.js"></script>
+<!-- ================= SYSTEM HEALTH ================= -->
+
+<div class="two-column">
+
+<div>
+
+<div class="card">
+
+<h3>⚙ SYSTEM HEALTH</h3>
+
+<div class="health-container">
+
+<div class="health-circle">
+    <span id="healthScore">92</span>
+    <small>/100</small>
+    <label>HEALTH SCORE</label>
+</div>
+
+<div class="health-bars">
+
+    <div>
+        <span>OBC</span>
+        <progress value="95" max="100"></progress>
+        <b>95%</b>
+    </div>
+
+    <div>
+        <span>EPS</span>
+        <progress value="94" max="100"></progress>
+        <b>94%</b>
+    </div>
+
+    <div>
+        <span>SNS</span>
+        <progress value="98" max="100"></progress>
+        <b>98%</b>
+    </div>
+
+    <div>
+        <span>COM</span>
+        <progress value="82" max="100"></progress>
+        <b>82%</b>
+    </div>
+
+    <div>
+        <span>FDIR</span>
+        <progress value="99" max="100"></progress>
+        <b>99%</b>
+    </div>
+
+    <div>
+        <span>ADCS</span>
+        <progress value="91" max="100"></progress>
+        <b>91%</b>
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================= LIVE TELEMETRY ================= -->
+
+<div class="card">
+
+<h3>▣ LIVE TELEMETRY</h3>
+
+<div class="telemetry-grid">
+
+    <div class="telemetry">
+        <span>Voltage</span>
+        <strong id="voltage">3.72 V</strong>
+        <small id="voltageState">● Normal</small>
+    </div>
+
+    <div class="telemetry">
+        <span>Current</span>
+        <strong id="current">0.24 A</strong>
+        <small id="currentState">● Normal</small>
+    </div>
+
+    <div class="telemetry">
+        <span>Temperature</span>
+        <strong id="temperature">31.2 °C</strong>
+        <small>● Normal</small>
+    </div>
+
+    <div class="telemetry">
+        <span>Power</span>
+        <strong id="power">0.89 W</strong>
+        <small>● Normal</small>
+    </div>
+
+    <div class="telemetry">
+        <span>Pressure</span>
+        <strong>1012 hPa</strong>
+        <small>● Normal</small>
+    </div>
+
+    <div class="telemetry">
+        <span>Humidity</span>
+        <strong>48%</strong>
+        <small>● Normal</small>
+    </div>
+
+</div>
+
+<h4>IMU</h4>
+
+<div class="imu">
+
+    <div>
+        <b>Accelerometer</b>
+        X 0.02 &nbsp;
+        Y -0.01 &nbsp;
+        Z 9.81
+    </div>
+
+    <div>
+        <b>Gyroscope</b>
+        X 0.12 &nbsp;
+        Y -0.08 &nbsp;
+        Z 0.05
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================= RIGHT COLUMN ================= -->
+
+<div>
+
+<!-- SUBSYSTEM -->
+
+<div class="card">
+
+<h3>⚙ SUBSYSTEM STATUS</h3>
+
+<div class="subsystems">
+
+    <div>▣<b>OBC</b><span>● Online</span></div>
+    <div>ϟ<b>EPS</b><span>● Online</span></div>
+    <div>◉<b>SNS</b><span>● Online</span></div>
+    <div>⌁<b>COM</b><span>● Online</span></div>
+    <div>◇<b>FDIR</b><span>● Active</span></div>
+    <div>◎<b>ADCS</b><span>● Online</span></div>
+
+</div>
+
+</div>
+
+
+<!-- ================= ESP32 ================= -->
+
+<div class="card">
+
+<h3>▣ CONTROLLER STATUS</h3>
+
+<div class="controller">
+
+    <div>
+        <span>ESP32 #1</span>
+        <b id="esp1">● ONLINE</b>
+        <small>MAIN OBC</small>
+    </div>
+
+    <div>
+        <span>ESP32 #2</span>
+        <b id="esp2">● ONLINE</b>
+        <small>FDIR SUPERVISOR</small>
+    </div>
+
+    <div>
+        <span>Heartbeat</span>
+        <b class="green">● ACTIVE</b>
+        <small>1.0 sec</small>
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- ================= INA219 ================= -->
+
+<div class="card">
+
+<h3>⚡ INA219 POWER MONITOR</h3>
+
+<div class="ina-grid">
+
+    <div>
+        <span>Bus Voltage</span>
+        <strong id="inaVoltage">3.72 V</strong>
+    </div>
+
+    <div>
+        <span>Current</span>
+        <strong id="inaCurrent">0.24 A</strong>
+    </div>
+
+    <div>
+        <span>Power</span>
+        <strong id="inaPower">0.89 W</strong>
+    </div>
+
+</div>
+
+<div class="limit">
+    Current Threshold:
+    <b>1.00 A</b>
+</div>
+
+<div id="inaStatus" class="normal-box">
+    ● NORMAL
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+                 RULE + ADAPTIVE LAYERS
+====================================================== -->
+
+<div class="card intelligence">
+
+<h3>🧠 FDIR INTELLIGENCE</h3>
+
+<div class="layer-grid">
+
+
+<!-- RULE -->
+
+<div class="layer">
+
+    <div class="layer-header">
+        <span>RULE LAYER</span>
+        <b id="ruleStatus">NORMAL</b>
+    </div>
+
+    <p>
+        Deterministic threshold-based fault detection.
+    </p>
+
+    <div class="layer-row">
+        <span>Measured Current</span>
+        <b id="ruleCurrent">0.24 A</b>
+    </div>
+
+    <div class="layer-row">
+        <span>Threshold</span>
+        <b>1.00 A</b>
+    </div>
+
+    <div class="layer-row">
+        <span>Condition</span>
+        <b id="ruleCondition">Current within limit</b>
+    </div>
+
+    <div class="layer-row">
+        <span>Decision</span>
+        <b id="ruleDecision">NO FAULT</b>
+    </div>
+
+</div>
+
+
+<!-- ADAPTIVE -->
+
+<div class="layer">
+
+    <div class="layer-header">
+        <span>ADAPTIVE LAYER</span>
+        <b id="adaptiveStatus">STANDBY</b>
+    </div>
+
+    <p>
+        Pattern and confidence-based anomaly analysis.
+    </p>
+
+    <div class="layer-row">
+        <span>Fault Candidate</span>
+        <b id="adaptiveFault">None</b>
+    </div>
+
+    <div class="layer-row">
+        <span>Confidence</span>
+        <b id="confidence">0%</b>
+    </div>
+
+    <div class="confidence-bar">
+        <div id="confidenceFill"></div>
+    </div>
+
+    <div class="layer-row">
+        <span>Pattern</span>
+        <b id="pattern">No anomaly</b>
+    </div>
+
+</div>
+
+</div>
+
+
+<div class="fdir-decision">
+
+    <span>FDIR DECISION</span>
+
+    <strong id="fdirDecision">
+        MONITOR
+    </strong>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+                     HARDWARE RECOVERY
+====================================================== -->
+
+<div class="card">
+
+<h3>🔧 HARDWARE FDIR RECOVERY</h3>
+
+<div class="recovery-grid">
+
+    <div class="recovery-item">
+        <span>Additional Load</span>
+        <b id="loadState">OFF</b>
+    </div>
+
+    <div class="recovery-item">
+        <span>MOSFET</span>
+        <b id="mosfetState">ON</b>
+    </div>
+
+    <div class="recovery-item">
+        <span>Affected Subsystem</span>
+        <b id="affectedSystem">NONE</b>
+    </div>
+
+    <div class="recovery-item">
+        <span>Recovery Action</span>
+        <b id="recoveryAction">NONE</b>
+    </div>
+
+</div>
+
+
+<div class="recovery-sequence">
+
+    <div id="stepDetect">① Detect</div>
+    <div id="stepDiagnose">② Diagnose</div>
+    <div id="stepIsolate">③ Isolate</div>
+    <div id="stepPower">④ Power Cycle</div>
+    <div id="stepRestore">⑤ Restore</div>
+    <div id="stepVerify">⑥ Verify</div>
+
+</div>
+
+
+<div class="verification">
+
+    <span>RECOVERY VERIFICATION</span>
+
+    <strong id="verificationStatus">
+        WAITING
+    </strong>
+
+</div>
+
+</div>
+
+
+<!-- ================= FDIR STATE ================= -->
+
+<div class="card">
+
+<h3>↻ FDIR STATE MACHINE</h3>
+
+<div class="state-machine">
+
+    <div>SENSE</div>
+    →
+    <div>VALIDATE</div>
+    →
+    <div>ANALYZE</div>
+    →
+    <div>DETECT</div>
+    →
+    <div>CLASSIFY</div>
+    →
+    <div>ISOLATE</div>
+    →
+    <div>RECOVER</div>
+    →
+    <div>VERIFY</div>
+    →
+    <div>LOG</div>
+
+</div>
+
+</div>
+
+
+<!-- ================= GRAPHS ================= -->
+
+<div class="card">
+
+<h3>▥ LIVE MONITORING</h3>
+
+<div class="charts">
+
+    <canvas id="currentChart"></canvas>
+    <canvas id="faultChart"></canvas>
+
+</div>
+
+</div>
+
+
+<!-- ================= EVENT LOG ================= -->
+
+<div class="card">
+
+<h3>⚡ EVENT LOG</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Time</th>
+<th>Event</th>
+<th>Status</th>
+<th>Details</th>
+</tr>
+</thead>
+
+<tbody id="eventLog">
+
+<tr>
+<td>10:42:10</td>
+<td>System initialized</td>
+<td>✓</td>
+<td>All subsystems online</td>
+</tr>
+
+<tr>
+<td>10:42:15</td>
+<td>Telemetry active</td>
+<td>✓</td>
+<td>Data flow normal</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</section>
+
+
+<!-- =====================================================
+                 MISSION SIMULATION
+====================================================== -->
+
+<section id="simulation" class="page">
+
+<div class="page-title">
+
+<h2>MISSION SIMULATION</h2>
+
+<p>
+Simulate spacecraft faults and observe autonomous FDIR recovery.
+</p>
+
+</div>
+
+
+<div class="simulation-grid">
+
+<div class="card">
+
+<h3>⚠ FAULT INJECTION</h3>
+
+<label>Fault Type</label>
+
+<select id="faultType">
+
+<option value="overcurrent">
+Overcurrent
+</option>
+
+<option value="undervoltage">
+Undervoltage
+</option>
+
+<option value="overtemperature">
+Overtemperature
+</option>
+
+<option value="communication">
+Communication Loss
+</option>
+
+</select>
+
+
+<button class="danger" onclick="injectFault()">
+⚡ INJECT FAULT
+</button>
+
+
+<button onclick="resetSystem()">
+↻ RESET SYSTEM
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>LOAD CONTROL</h3>
+
+<p>
+Additional electrical load used to demonstrate
+the overcurrent fault.
+</p>
+
+<button onclick="activateLoad()">
+ACTIVATE ADDITIONAL LOAD
+</button>
+
+<div class="large-status">
+
+<span>LOAD</span>
+
+<strong id="simulationLoad">
+OFF
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>FDIR SIMULATION OUTPUT</h3>
+
+<div id="simulationOutput">
+
+System operating normally.
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+                     ANALYTICS
+====================================================== -->
+
+<section id="analytics" class="page">
+
+<div class="page-title">
+
+<h2>ANALYTICS</h2>
+
+<p>Telemetry, fault and recovery analysis.</p>
+
+</div>
+
+
+<div class="analytics-grid">
+
+<div class="card">
+
+<h3>CURRENT HISTORY</h3>
+
+<canvas id="analyticsCurrent"></canvas>
+
+</div>
+
+
+<div class="card">
+
+<h3>FAULT HISTORY</h3>
+
+<canvas id="analyticsFault"></canvas>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>FAULT HISTORY</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Fault</th>
+<th>Severity</th>
+<th>Detection</th>
+<th>Recovery</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Overcurrent</td>
+<td>Critical</td>
+<td>Rule + Adaptive</td>
+<td>2.3 sec</td>
+<td>✓ Recovered</td>
+</tr>
+
+<tr>
+<td>Sensor Drift</td>
+<td>Warning</td>
+<td>Adaptive</td>
+<td>1.8 sec</td>
+<td>✓ Recovered</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+                     SETTINGS
+====================================================== -->
+
+<section id="settings" class="page">
+
+<div class="page-title">
+
+<h2>FDIR SETTINGS</h2>
+
+<p>Configure detection and recovery parameters.</p>
+
+</div>
+
+
+<div class="settings-grid">
+
+<div class="card">
+
+<h3>RULE LAYER THRESHOLDS</h3>
+
+<label>
+Overcurrent threshold
+</label>
+
+<input
+type="number"
+id="currentThresholdInput"
+value="1.00"
+step="0.01"
+>
+
+<span>A</span>
+
+
+<label>
+Overtemperature threshold
+</label>
+
+<input
+type="number"
+value="45"
+>
+
+<span>°C</span>
+
+
+<label>
+Undervoltage threshold
+</label>
+
+<input
+type="number"
+value="3.30"
+step="0.01"
+>
+
+<span>V</span>
+
+</div>
+
+
+<div class="card">
+
+<h3>RECOVERY SETTINGS</h3>
+
+<label>
+MOSFET recovery delay
+</label>
+
+<input
+type="number"
+id="recoveryDelayInput"
+value="2"
+>
+
+<span>seconds</span>
+
+
+<label>
+Heartbeat timeout
+</label>
+
+<input
+type="number"
+value="3"
+>
+
+<span>seconds</span>
+
+
+<button onclick="saveSettings()">
+SAVE SETTINGS
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
 <script src="script.js"></script>
 
 </body>
